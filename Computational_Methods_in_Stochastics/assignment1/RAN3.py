@@ -1,6 +1,5 @@
-from GGL import ggl_generator
+from assignment1.GGL import ggl_generator
 from collections import deque
-import numpy as np
 import matplotlib.pyplot as plt
 
 

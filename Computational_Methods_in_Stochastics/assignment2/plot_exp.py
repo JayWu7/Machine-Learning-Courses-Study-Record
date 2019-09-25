@@ -53,7 +53,7 @@ def plot_z():
 def pdf_z():
     axis = np.linspace(0, 1, 10000, endpoint=False)
     x = [np.exp(-i) for i in axis]
-    
+
     y = [(-np.log(1 - u) / 2 - 1) for u in axis]
 
     x = np.array(x)

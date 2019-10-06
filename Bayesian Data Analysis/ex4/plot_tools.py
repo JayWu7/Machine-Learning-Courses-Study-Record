@@ -1,6 +1,6 @@
 # custom styles for matplotlib usable with plt.style.use()
 
-ccustom_styles = dict(
+custom_styles = dict(
     gray_background = {
         'axes.axisbelow': True,
         'axes.edgecolor': 'white',

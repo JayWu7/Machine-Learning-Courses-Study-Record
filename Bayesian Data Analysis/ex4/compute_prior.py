@@ -146,9 +146,7 @@ def log_weight(a, b):
 
 
 def normalized_weight(weights):
-    new_weights = np.empty(len(weights))
-    for i in range(len(weights)):
-        new_weights[i] = np.exp(weights[i])
+    new_weights = np.array(weights)
     new_weights = new_weights / sum(new_weights)
     return new_weights
 
@@ -228,7 +226,7 @@ def estimate_p(resampling_b):
 
 def plot_hist_posterior(resamples_a, resamples_b):
     new_resample = []
-    for i in range(len(resamples)):
+    for i in range(len(resamples_b)):
         if resamples_b[i] > 0:
             new_resample.append(-resamples_a[i] / resamples_b[i])
     new_resamples = np.array(new_resample)
@@ -239,8 +237,8 @@ def plot_hist_posterior(resamples_a, resamples_b):
 
 
 if __name__ == '__main__':
-    # samples_a = [1.896, -3.6, 0.374, 0.964, -3.123, -1.581]
-    # samples_b = [24.76, 20.04, 6.15, 18.65, 8.16, 17.4]
+    # samples_a = [1.8, 0.75, 1.5]
+    # samples_b = [10.2, 14.12, 9]
     #
     # weights = []
     # for a, b in zip(samples_a, samples_b):
@@ -249,10 +247,11 @@ if __name__ == '__main__':
     # print(normalized_weight(weights))
     # print(sum(normalized_weight(weights)))
     # print(estimate_mean(1000))
-    # print(compute_s_eff(estimate_mean(100)))
-    weights, samples, sam_a, sam_b = generate_samples(10000)
-    resamples, resamples_a, resamples_b, indexes = generate_resample(weights, samples, sam_a, sam_b, 1000)
+    print(compute_s_eff(estimate_mean(50000)))
+    # weights, samples, sam_a, sam_b = generate_samples(10000)
+    # resamples, resamples_a, resamples_b, indexes = generate_resample(weights, samples, sam_a, sam_b, 1000)
     # plot_importance_resampling(resamples, resamples_a, resamples_b)
     # print(estimate_p(resamples_b))
-    plot_hist_posterior(resamples_a, resamples_b)
+    # plot_hist_posterior(resamples_a, resamples_b)
+    # print(log_weight(1, 10))
 # plot_posterior()

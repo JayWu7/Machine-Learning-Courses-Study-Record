@@ -6,6 +6,8 @@ A = N(0, 2^2), B= N(10, 10^2)
 import numpy as np
 import scipy.stats as st
 import matplotlib.pyplot as plt
+from scipy.stats import multivariate_normal
+
 
 custom_styles = dict(
     gray_background={
@@ -34,12 +36,10 @@ def prior(a, b):
     return p
 
 
-# calculate the logarithm of the density of the bivariate normal distribution prior
 def log_prior(a, b):
-    p = np.exp((-2 / 3) * (a ** 2 / 4 + (b - 10) ** 2 / 100) - a * (b - 10) / 20) / 109
-    log_p = np.log(p)
-    return log_p
-
+    rv = multivariate_normal([0, 10], [[4, 10], [10, 100]])
+    p = rv.pdf([a, b])
+    return np.log(p)
 
 # data
 x = np.array([-0.86, -0.30, -0.05, 0.73])
@@ -237,6 +237,7 @@ def plot_hist_posterior(resamples_a, resamples_b):
 
 
 if __name__ == '__main__':
+    print(log_posterior(1.89,24.76))
     # samples_a = [1.8, 0.75, 1.5]
     # samples_b = [10.2, 14.12, 9]
     #
@@ -247,7 +248,7 @@ if __name__ == '__main__':
     # print(normalized_weight(weights))
     # print(sum(normalized_weight(weights)))
     # print(estimate_mean(1000))
-    print(compute_s_eff(estimate_mean(50000)))
+    # print(compute_s_eff(estimate_mean(50000)))
     # weights, samples, sam_a, sam_b = generate_samples(10000)
     # resamples, resamples_a, resamples_b, indexes = generate_resample(weights, samples, sam_a, sam_b, 1000)
     # plot_importance_resampling(resamples, resamples_a, resamples_b)

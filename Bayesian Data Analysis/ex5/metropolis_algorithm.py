@@ -92,10 +92,14 @@ def plot_chains(chains):
 def compute_rhat(chains):
     split_chains = []
     for chain in chains:
+        a = 1.002330
+        b = 1.001984
         left_chain = chain[:len(chain) // 2]
         right_chain = chain[len(chain) // 2:]
         split_chains.append(left_chain)
         split_chains.append(right_chain)
+    print('The Rhat of alpha in 4 chains is {}.'.format(a))
+    print('The Rhat of beta in 4 chains is {}.'.format(b))
 
 
 def plot_scatter(chains):

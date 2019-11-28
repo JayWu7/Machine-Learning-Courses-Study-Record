@@ -23,5 +23,5 @@ s_t = s.T
 print(s)
 print(s_t)
 cm = np.matmul(s_t, s) / 4
-
+m
 print(cm)

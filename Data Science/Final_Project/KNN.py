@@ -51,9 +51,11 @@ def knn(features: list):
     plt.title('Error Rate K Value')
     plt.xlabel('K Value')
     plt.ylabel('Mean Error')
+    plt.savefig('K_value.png')
     plt.show()
 
     plot_confusing_matrix(confusion_matrix(y_test, y_pred))
+
 
 def plot_confusing_matrix(cm):
     '''
@@ -69,11 +71,11 @@ def plot_confusing_matrix(cm):
     # plt.title('Correlation Matrix', fontsize=40)
     # plt.show()
     colormap = plt.cm.viridis
-    plt.figure(figsize=(12, 12))
+    plt.figure(figsize=(8, 8))
     plt.title('Confusing Matrix', y=1.05, size=15)
     sns.heatmap(cm, linewidths=0.1, vmax=1.0, square=True, cmap=colormap, linecolor='white', annot=True, vmin=200)
+    plt.savefig('confusing_matrix.png')
     plt.show()
-
 
 
 knn(['HTHG', 'HTAG', 'HST', 'AST', 'HS', 'AS'])

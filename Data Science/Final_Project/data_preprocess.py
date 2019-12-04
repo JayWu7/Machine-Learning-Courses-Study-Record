@@ -38,10 +38,10 @@ def plot_correlation(cor_matrix):
     # plt.title('Correlation Matrix', fontsize=40)
     # plt.show()
     colormap = plt.cm.viridis
-    plt.figure(figsize=(12, 12))
+    plt.figure(figsize=(20, 12))
     plt.title('Pearson Correlation of Features', y=1.05, size=15)
     sns.heatmap(cor_matrix, linewidths=0.1, vmax=1.0, square=True, cmap=colormap, linecolor='white', annot=True)
-    plt.show()
+    plt.savefig('correlation.png')
 
 
 def plot_pairs(df, data):
@@ -52,11 +52,12 @@ def plot_pairs(df, data):
                 pairs.append((i, c))
     for pair in pairs:
         sns.pairplot(data, height=3, vars=pair, kind='reg', markers="+", diag_kind="kde")
-        plt.show()
+        plt.savefig('{}_{}.png'.format(pair[0], pair[1]))
 
 
-def generate_SH():
-    pass
+def plot_feature(data):
+    plt.hist(data, 10, edgecolor='grey')
+    plt.show()
 
 
 def preprocess(flag='train'):
@@ -73,6 +74,7 @@ def preprocess(flag='train'):
     # plot_correlation(cor_matrix)
 
     # plot_pairs(cor_matrix, x)
+    plot_feature(x['FTG'].values)
     return x
 
 

@@ -19,10 +19,11 @@ def plot_two_features(data, f1, f2):
 
 
 def plot_density_feature(data, f):
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(18, 12))
     plt.tight_layout()
     seabornInstance.distplot(data[f])
-    plt.show()
+    # plt.show()
+    plt.savefig('{}.png'.format(f))
 
 
 def simple_regression(X, y, X_test, y_test):
@@ -39,19 +40,20 @@ def simple_regression(X, y, X_test, y_test):
     y_pred = regressor.predict(X_test)
 
     df = pd.DataFrame({'Actual': y_test.flatten(), 'Predicted': y_pred.flatten()})
-    df1 = df.head(30)
+    df1 = df.sample(30)
     df1.plot(kind='bar', figsize=(16, 10))
     plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
     plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-    # plt.show()
-    # plot_test_data(X_test, y_test, y_pred)
+    plt.savefig('simple_regression.png')
+    plt.show()
+    plot_test_data(X_test, y_test, y_pred)
     calculate_error(y_test, y_pred)
 
 
 def plot_test_data(X_test, y_test, y_pred):
     plt.scatter(X_test, y_test, color='gray')
     plt.plot(X_test, y_pred, color='red', linewidth=2)
-    plt.show()
+    plt.savefig('regression_test.png')
 
 
 def calculate_error(y_test, y_pred):
@@ -69,8 +71,7 @@ def multiple_regression(data: pd.DataFrame, test_data: pd.DataFrame, features: l
     X_test = test_data[features].values
     y_test = test_data['FTG'].values
 
-
-    #train our model
+    # train our model
     regressor = LinearRegression()
     regressor.fit(X_train, y_train)
 
@@ -87,12 +88,15 @@ def multiple_regression(data: pd.DataFrame, test_data: pd.DataFrame, features: l
     print(df1)
 
     # plot the difference
-    df1.plot(kind='bar', figsize=(10, 8))
+    df1.plot(kind='bar', figsize=(16, 10))
     plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
     plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+    plt.savefig('multi_regression.png')
     plt.show()
 
     calculate_error(y_test, y_pred)
+    # plot_test_data(X_test, y_test, y_pred)
+
 
 def simple_model(fea):
     train_data = preprocess()
@@ -111,7 +115,7 @@ def multiple_model(features):
     test_data = preprocess('test')
 
     multiple_regression(train_data, test_data, features)
-    # plot_density_feature(train_data, 'FTG')
+    plot_density_feature(train_data, 'FTG')
 
 
 # plot_two_features(preprocess(), 'AST', 'FTG')

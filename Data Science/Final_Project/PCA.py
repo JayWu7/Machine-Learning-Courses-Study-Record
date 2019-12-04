@@ -27,20 +27,16 @@ def pca_process(data):
 
     finalDf = pd.concat([principalDf, data[['FTG']]], axis=1)
 
-    print(finalDf)
-
     plot_projection(finalDf)
 
     # plot Explained Variance
-
-    plot_explained_variance(pca.explained_variance_ratio_)
-    print(type(pca.explained_variance_ratio_))
+    # plot_explained_variance(pca.explained_variance_ratio_)
 
     return finalDf
 
 
 def plot_projection(df):
-    fig = plt.figure(figsize=(8, 8))
+    fig = plt.figure(figsize=(18, 12))
     ax = fig.add_subplot(1, 1, 1)
     ax.set_xlabel('Principal Component 1', fontsize=15)
     ax.set_ylabel('Principal Component 2', fontsize=15)
@@ -53,7 +49,7 @@ def plot_projection(df):
                    c=color, s=30)
     ax.legend(targets)
     ax.grid()
-    plt.show()
+    plt.savefig('projection.png')
 
 
 def plot_explained_variance(vars):
@@ -64,8 +60,10 @@ def plot_explained_variance(vars):
              markeredgewidth=2)
     my_x_ticks = np.arange(0, len(vars) + 1, 1)
     plt.xticks(my_x_ticks)
+    plt.xlabel('Components Number')
+    plt.ylabel('Cumulative Explained Variance')
     plt.grid()
-    plt.show()
+    plt.savefig('explained_variance.png')
 
 
 if __name__ == '__main__':
@@ -74,6 +72,5 @@ if __name__ == '__main__':
     pca_data = pca_process(data)
     pca_test_data = pca_process(train_data)
     features = pca_data.columns[:-1]
-
     # using pca data to do the regression job
     multiple_regression(pca_data, pca_test_data, features)

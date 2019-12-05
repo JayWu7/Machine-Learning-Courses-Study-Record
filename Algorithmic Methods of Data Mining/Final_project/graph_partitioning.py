@@ -125,15 +125,17 @@ def k_means(data, k):
     return kmeans.labels_
 
 
-def get_clusters(labels, k):
+def get_clusters(labels, k, filename):
     '''
     return the clusters of vertices
     :param labels: labels generated from kmeans method
     :return: clusters
     '''
     clusters = [[] for _ in range(k)]
-    for i, l in enumerate(labels):
-        clusters[l].append(i)
+    with open('./result/{}_res.txt'.format(filename[:-4]), 'w') as f:
+        for i, l in enumerate(labels):
+            f.write('{} {}\n'.format(i, l))
+            clusters[l].append(i)
     return clusters
 
 
@@ -161,14 +163,16 @@ def partitioning_1(filename):
     lap = generate_lap(dia, adj)
     data = get_U(lap, k)
     labels = k_means(data, k)
-    clusters = get_clusters(labels, k)
+    clusters = get_clusters(labels, k, filename)
     t = time.time()
     print(t - s)
     return clusters
 
 
+
+
 if __name__ == '__main__':
-    label2 = partitioning_1('soc-Epinions1.txt')
+    label2 = partitioning_1('Oregon-1.txt')
     for row in label2:
         print(row)
         print(len(row))

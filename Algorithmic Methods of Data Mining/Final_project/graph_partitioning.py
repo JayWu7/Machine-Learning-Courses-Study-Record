@@ -3,7 +3,7 @@ from sklearn.cluster import KMeans
 import time
 from scipy.sparse.linalg import eigs
 from scipy.sparse import csr_matrix
-
+import gc
 
 def form_graph(filename):
     '''
@@ -12,6 +12,7 @@ def form_graph(filename):
     :return: graph, in the shape used latter
             n, k
     '''
+    a = time.time()
     with open('./data/{}'.format(filename), 'r') as f:
         first_line = f.readline()[:-1]  # remove '\n' at the end
         meta = first_line.split(' ')
@@ -19,11 +20,15 @@ def form_graph(filename):
 
         lines = f.readlines()
 
-    graph = np.ndarray((e, 2), dtype=np.int32)
+    graph = np.ndarray((e, 2), dtype=np.int64)
     for i, edge in enumerate(lines):
         s, t = edge[:-1].split(' ')
         graph[i] = int(s), int(t)
-
+    
+    del lines
+    gc.collect()
+    e  = time.time()
+    print('Time for form graph:{}'.format(e - a))
     return graph, n, k
 
 
@@ -34,9 +39,14 @@ def generate_adj(graph, n):
     :param n: the number of vertices in this graph
     :return: adjacency matrix
     '''
-    adj = np.zeros((n, n), dtype=np.int32)
+    a = time.time()
+    adj = np.zeros((n, n), dtype=np.int16)
     for s, t in graph:
         adj[s, t] = adj[t, s] = 1
+    t = time.time()
+    del graph
+    gc.collect()
+    print('Time for generate adjacency matrix:{}'.format(t-a))
     return adj
 
 
@@ -47,9 +57,12 @@ def generate_dia(adj, n):
     :param n: the number of vertices in this graph
     :return: diagonal matrix
     '''
-    dia = np.zeros((n, n), dtype=np.int32)
+    s = time.time()
+    dia = np.zeros((n, n), dtype=np.int16)
     for i, row in enumerate(adj):
-        dia[i][i] = sum(row)
+        dia[i][i] = row.sum()
+    t = time.time()
+    print('Time for generate diagonal matrix:{}'.format(t - s))
     return dia
 
 
@@ -60,10 +73,16 @@ def generate_lap(dia, adj):
     :param adj: adjacency matrix
     :return: Laplacian matrix
     '''
+    s = time.time()
     lap = dia - adj
     # normalize lap
     x = np.linalg.norm(lap)
     lap = lap / x
+    t = time.time()
+    del dia
+    del adj
+    gc.collect()
+    print('Time for generate laplacian matrix:{}'.format(t-s))
     return lap
 
 
@@ -94,7 +113,9 @@ def get_U(lap, k):
     x = np.linalg.norm(U)
     U = U / x
     t = time.time()
-    print(t - s)
+    del lap
+    gc.collect()
+    print('Time for get U:{}'.format(t - s))
     return U
 
 
@@ -120,8 +141,10 @@ def k_means(data, k):
     s = time.time()
     kmeans = KMeans(n_clusters=k, algorithm='auto')
     kmeans.fit(data)
+    del data
+    gc.collect()
     t = time.time()
-    print(t-s)
+    print('Time for run K-means algorithm:{}'.format(t-s))
     return kmeans.labels_
 
 
@@ -131,12 +154,17 @@ def get_clusters(labels, k, filename):
     :param labels: labels generated from kmeans method
     :return: clusters
     '''
-    clusters = [[] for _ in range(k)]
+    s = time.time()
+    #clusters = [[] for _ in range(k)]
     with open('./result/{}_res.txt'.format(filename[:-4]), 'w') as f:
         for i, l in enumerate(labels):
             f.write('{} {}\n'.format(i, l))
-            clusters[l].append(i)
-    return clusters
+          #  clusters[l].append(i)
+    #return cluster
+    del labels
+    gc.collect()
+    t = time.time()
+    print('Time for writing result:{}'.format(t - s))
 
 
 def partitioning(filename):
@@ -163,16 +191,13 @@ def partitioning_1(filename):
     lap = generate_lap(dia, adj)
     data = get_U(lap, k)
     labels = k_means(data, k)
-    clusters = get_clusters(labels, k, filename)
+    get_clusters(labels, k, filename)
     t = time.time()
-    print(t - s)
-    return clusters
+    print('Total time consumption:{}'.format(t - s))
+    #return clusters
 
 
 
 
 if __name__ == '__main__':
-    label2 = partitioning_1('Oregon-1.txt')
-    for row in label2:
-        print(row)
-        print(len(row))
+    label2 = partitioning_1('web-NotreDame.txt')

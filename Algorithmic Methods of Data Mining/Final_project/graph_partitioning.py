@@ -2,8 +2,10 @@ import numpy as np
 from sklearn.cluster import KMeans
 import time
 from scipy.sparse.linalg import eigs
-from scipy.sparse import csr_matrix
+from scipy.sparse import csr_matrix, lil_matrix, spmatrix
+from scipy.sparse import csgraph
 import gc
+
 
 def form_graph(filename):
     '''
@@ -24,10 +26,10 @@ def form_graph(filename):
     for i, edge in enumerate(lines):
         s, t = edge[:-1].split(' ')
         graph[i] = int(s), int(t)
-    
+
     del lines
     gc.collect()
-    e  = time.time()
+    e = time.time()
     print('Time for form graph:{}'.format(e - a))
     return graph, n, k
 
@@ -40,13 +42,14 @@ def generate_adj(graph, n):
     :return: adjacency matrix
     '''
     a = time.time()
-    adj = np.zeros((n, n), dtype=np.int16)
+    adj = lil_matrix((n, n), dtype=np.int16)
+    # adj = np.zeros((n, n))
     for s, t in graph:
         adj[s, t] = adj[t, s] = 1
     t = time.time()
     del graph
     gc.collect()
-    print('Time for generate adjacency matrix:{}'.format(t-a))
+    print('Time for generate adjacency matrix:{}'.format(t - a))
     return adj
 
 
@@ -58,15 +61,16 @@ def generate_dia(adj, n):
     :return: diagonal matrix
     '''
     s = time.time()
-    dia = np.zeros((n, n), dtype=np.int16)
-    for i, row in enumerate(adj):
-        dia[i][i] = row.sum()
+    dia = csr_matrix((n, n), dtype=np.int16)
+    # dia = np.zeros((n, n), dtype=np.int16)
+    for i, r in enumerate(adj):
+        dia[i][i] = sum(row)
     t = time.time()
     print('Time for generate diagonal matrix:{}'.format(t - s))
     return dia
 
 
-def generate_lap(dia, adj):
+def generate_lap(adj):
     '''
     From adjacency matrix and diagonal matrix build Laplacian matrix
     :param dia: diagonal matrix
@@ -74,15 +78,17 @@ def generate_lap(dia, adj):
     :return: Laplacian matrix
     '''
     s = time.time()
-    lap = dia - adj
-    # normalize lap
-    x = np.linalg.norm(lap)
-    lap = lap / x
+    # lap = dia - adj
+    # # normalize lap
+    # x = np.linalg.norm(lap)
+    # lap = lap / x
+    #
+    # del dia
+    # del adj
+    lap = csgraph.laplacian(adj, normed=False)
     t = time.time()
-    del dia
-    del adj
-    gc.collect()
-    print('Time for generate laplacian matrix:{}'.format(t-s))
+    # gc.collect()
+    print('Time for generate laplacian matrix:{}'.format(t - s))
     return lap
 
 
@@ -106,7 +112,7 @@ def get_U(lap, k):
     :return: matrix U
     '''
     s = time.time()
-    lap = csr_matrix(lap)
+    lap = lap.astype('float64')
     _, first_k = eigs(lap, k, sigma=0)
     U = first_k.real
     # normalize U
@@ -144,7 +150,7 @@ def k_means(data, k):
     del data
     gc.collect()
     t = time.time()
-    print('Time for run K-means algorithm:{}'.format(t-s))
+    print('Time for run K-means algorithm:{}'.format(t - s))
     return kmeans.labels_
 
 
@@ -155,16 +161,16 @@ def get_clusters(labels, k, filename):
     :return: clusters
     '''
     s = time.time()
-    #clusters = [[] for _ in range(k)]
+    clusters = [[] for _ in range(k)]
     with open('./result/{}_res.txt'.format(filename[:-4]), 'w') as f:
         for i, l in enumerate(labels):
             f.write('{} {}\n'.format(i, l))
-          #  clusters[l].append(i)
-    #return cluster
+            clusters[l].append(i)
     del labels
     gc.collect()
     t = time.time()
     print('Time for writing result:{}'.format(t - s))
+    return clusters
 
 
 def partitioning(filename):
@@ -187,17 +193,18 @@ def partitioning_1(filename):
     s = time.time()
     graph, n, k = form_graph(filename)
     adj = generate_adj(graph, n)
-    dia = generate_dia(adj, n)
-    lap = generate_lap(dia, adj)
+    # dia = generate_dia(adj, n)
+    lap = generate_lap(adj)
     data = get_U(lap, k)
     labels = k_means(data, k)
-    get_clusters(labels, k, filename)
+    clusters = get_clusters(labels, k, filename)
     t = time.time()
     print('Total time consumption:{}'.format(t - s))
-    #return clusters
-
-
+    return clusters
 
 
 if __name__ == '__main__':
-    label2 = partitioning_1('web-NotreDame.txt')
+    label2 = partitioning_1('soc-Epinions1.txt')
+    for row in label2:
+        print(row)
+        print(len(row))

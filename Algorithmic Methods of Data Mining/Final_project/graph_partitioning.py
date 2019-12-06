@@ -31,7 +31,7 @@ def form_graph(filename):
     gc.collect()
     e = time.time()
     print('Time for form graph:{}'.format(e - a))
-    return graph, n, k
+    return graph, n, k, first_line
 
 
 def generate_adj(graph, n):
@@ -154,23 +154,21 @@ def k_means(data, k):
     return kmeans.labels_
 
 
-def get_clusters(labels, k, filename):
+def get_clusters(labels, k, filename, firstline):
     '''
     return the clusters of vertices
     :param labels: labels generated from kmeans method
     :return: clusters
     '''
     s = time.time()
-    clusters = [[] for _ in range(k)]
     with open('./result/{}_res.txt'.format(filename[:-4]), 'w') as f:
+        f.write('{}\n'.format(firstline))
         for i, l in enumerate(labels):
             f.write('{} {}\n'.format(i, l))
-            clusters[l].append(i)
     del labels
     gc.collect()
     t = time.time()
     print('Time for writing result:{}'.format(t - s))
-    return clusters
 
 
 def partitioning(filename):
@@ -191,20 +189,16 @@ def partitioning(filename):
 
 def partitioning_1(filename):
     s = time.time()
-    graph, n, k = form_graph(filename)
+    graph, n, k, fl = form_graph(filename)
     adj = generate_adj(graph, n)
     # dia = generate_dia(adj, n)
     lap = generate_lap(adj)
     data = get_U(lap, k)
     labels = k_means(data, k)
-    clusters = get_clusters(labels, k, filename)
+    get_clusters(labels, k, filename, fl)
     t = time.time()
     print('Total time consumption:{}'.format(t - s))
-    return clusters
 
 
 if __name__ == '__main__':
-    label2 = partitioning_1('soc-Epinions1.txt')
-    for row in label2:
-        print(row)
-        print(len(row))
+    partitioning_1('ca-GrQc.txt')

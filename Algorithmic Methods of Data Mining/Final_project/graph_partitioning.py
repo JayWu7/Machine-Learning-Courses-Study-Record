@@ -161,30 +161,16 @@ def get_clusters(labels, k, filename, firstline):
     :return: clusters
     '''
     s = time.time()
-    with open('./result/{}_res.txt'.format(filename[:-4]), 'w') as f:
+    clusters = [set() for _ in range(k)]
+    with open('./result/{}_output.txt'.format(filename[:-4]), 'w') as f:
         f.write('{}\n'.format(firstline))
         for i, l in enumerate(labels):
+            clusters[l].add(i)
             f.write('{} {}\n'.format(i, l))
-    del labels
-    gc.collect()
     t = time.time()
     print('Time for writing result:{}'.format(t - s))
-
-
-def partitioning(filename):
-    s = time.time()
-    graph, n, k = form_graph(filename)
-    adj = generate_adj(graph, n)
-    dia = generate_dia(adj, n)
-    lap = generate_lap(dia, adj)
-    vec_k = compute_k_eigenvectors(lap, k)
-    data = generate_u(vec_k)
-    labels = k_means(data, k)
-    clusters = get_clusters(labels, k)
-    print(clusters)
-    t = time.time()
-    print(t - s)
     return clusters
+
 
 
 def partitioning_1(filename):
@@ -195,10 +181,14 @@ def partitioning_1(filename):
     lap = generate_lap(adj)
     data = get_U(lap, k)
     labels = k_means(data, k)
-    get_clusters(labels, k, filename, fl)
+    clusters = get_clusters(labels, k, filename, fl)
     t = time.time()
     print('Total time consumption:{}'.format(t - s))
+    return clusters
 
 
 if __name__ == '__main__':
-    partitioning_1('ca-GrQc.txt')
+    labels = partitioning_1('Oregon-1.txt')
+    for i in labels:
+        print(i)
+        print(len(i))

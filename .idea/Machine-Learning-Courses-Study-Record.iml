@@ -6,6 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Bayesian Data Analysis/ex4" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Data Science/Final_Project" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Principles of Algorithmic Techniques/Final_project/1. Christofides Algorithm" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Principles of Algorithmic Techniques/Final_project" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.5 (master_courses)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

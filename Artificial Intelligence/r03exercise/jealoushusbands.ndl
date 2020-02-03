@@ -1,0 +1,89 @@
+
+// The Jealous Husbands puzzle
+// A number of couples have to cross a river with a boat with capacity two.
+// The husbands are jealous, so no woman is allowed to be without her husband
+// and with another man on either of the riverbanks or on the boat.
+
+type riverbank = { bank1, bank2 };
+type location = riverbank U { boat };
+
+type woman = { w1, w2 };
+type man = { m1, m2 };
+
+type person = woman U man;
+
+decl couple[woman,man] : bool;
+decl boatloc : riverbank;
+decl personloc[person] : location;
+
+decl womenIn[location] : int;
+decl menIn[location] : int;
+
+initial
+couple[w1,m1] := 1;
+couple[w2,m2] := 1;
+boatloc := bank1;
+personloc[w1] := bank1;
+personloc[w2] := bank1;
+personloc[m1] := bank1;
+personloc[m2] := bank1;
+womenIn[bank1] := 2;
+menIn[bank1] := 2;
+
+action moveboat()
+womenIn[boat]+menIn[boat] > 0
+=>
+if boatloc = bank1 then boatloc := bank2;
+if boatloc = bank2 then boatloc := bank1;
+
+// boarding for women
+action womanBoard( w : woman, m : man, l : riverbank)
+personloc[w] = l
+& boatloc = l
+& couple[w,m]
+& womenIn[boat] + menIn[boat] < 2
+& (menIn[boat] = 0
+  | personloc[m] = boat)
+=>
+personloc[w] := boat;
+womenIn[boat] := womenIn[boat] + 1;
+womenIn[l] := womenIn[l] - 1;
+
+// boarding for men
+action manBoard( w : woman, m : man, l : riverbank)
+personloc[m] = l
+& boatloc = l
+& couple[w,m]
+& womenIn[boat] + menIn[boat] < 2
+& (womenIn[boat] = 0
+  | personloc[w] = boat)
+& not (personloc[w] = l & menIn[l] > 1)
+=>
+personloc[m] := boat;
+menIn[boat] := menIn[boat] + 1;
+menIn[l] := menIn[l] - 1;
+
+// exiting for women
+action womanExit( w : woman, m : man, l : riverbank)
+personloc[w] = boat
+& boatloc = l
+& couple[w,m]
+& (menIn[l] = 0 | personloc[m] = l)
+=>
+personloc[w] := l;
+womenIn[boat] := womenIn[boat] - 1;
+womenIn[l] := womenIn[l] + 1;
+
+// exiting for men
+action manExit( w : woman, m : man, l : riverbank)
+personloc[m] = boat
+& boatloc = l
+& couple[w,m]
+& (personloc[w1] = l -> ((w=w1) | personloc[m1] = l))
+& (personloc[w2] = l -> ((w=w2) | personloc[m2] = l))
+=>
+personloc[m] := l;
+menIn[boat] := menIn[boat] - 1;
+menIn[l] := menIn[l] + 1;
+
+goal personloc[w1] = bank2 & personloc[w2] = bank2 & personloc[m1] = bank2 & personloc[m2] = bank2;

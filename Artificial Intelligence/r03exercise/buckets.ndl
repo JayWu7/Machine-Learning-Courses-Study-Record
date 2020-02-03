@@ -1,0 +1,54 @@
+
+// There are three buckets
+
+type bucket = {	b1, b2, b3 };
+
+// Each bucket has a maximum capacity, and the current amount of water
+
+decl capacity[bucket] : int;
+decl waterlevel[bucket] : int;
+
+// Empty contents of one bucket to another, without the latter overflowing
+
+action empty_b2b( b1 : bucket, b2 : bucket)
+(b1 != b2) & (waterlevel[b2] + waterlevel[b1] <= capacity[b2])
+=>
+waterlevel[b1] := 0;
+waterlevel[b2] := waterlevel[b2] + waterlevel[b1];
+
+// Pour water from one bucket to another, until the latter is full
+
+action fill_b2b( b1 : bucket, b2 : bucket)
+(b1 != b2) & (waterlevel[b1] + waterlevel[b2] >= capacity[b2])
+=>
+waterlevel[b2] := capacity[b2];
+waterlevel[b1] := waterlevel[b1] - (capacity[b2] - waterlevel[b2]);
+
+// Empty the contents of a bucket on the ground
+
+action empty( b : bucket)
+true
+=> 
+waterlevel[b] := 0;
+
+// Fill a bucket from the tap
+
+action fill( b : bucket)
+true
+=>
+waterlevel[b] := capacity[b];
+
+// The buckets have given capacities, and all the buckets are initially empty
+
+initial
+capacity[b1] := 3;
+capacity[b2] := 5;
+capacity[b3] := 10;
+	
+waterlevel[b1] := 0;
+waterlevel[b2] := 0;
+waterlevel[b3] := 0;
+
+// The goal is to have given amounts of water in the buckets
+
+goal waterlevel[b2] = 2 & waterlevel[b1] = 1;

@@ -1,0 +1,64 @@
+
+(* Manipulation of bit-vectors by the operations of
+     increment +1,
+     shift left, and
+     inverting some of the bottom bits.
+   Objective: obtain the goal vector with fewest possible operations.
+*)
+
+type bits = [0..5];
+
+decl B[bits] : bool;
+
+(* Incrementing a 6 bit vector:
+   Turn vwxyz0 to vwxyz1
+   Turn vwxy01 to vwxy10
+   Turn vwx011 to vwx100
+   Turn vw0111 to vw1000
+   Turn v01111 to v10000
+   Turn 011111 to 100000
+*)
+
+action inc()
+true
+=>
+if not B[0] then B[0];
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+
+(* Shift: Turn uvwxyz to vwxyz0 *)
+
+action shift()
+true
+=>
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+
+(* Invert 3 least significant bits: uvwxyz to uvwXYZ,
+     where X is x complemented, i.e. 0 becomes 1 and 1 becomes 0.
+*)
+
+action invert210()
+true
+=>
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+(**** COMPLETE THE SPECIFICATION HERE ****)
+
+(* Initial vector is 000001
+   Only needs to list the bits that are 1. Others are 0 by default.
+*)
+
+initial
+B[0] := 1;
+
+(* Goal vector is 111010. *)
+
+goal B[5] & B[4] & B[3] & not B[2] & B[1] & not B[0];

@@ -1,0 +1,125 @@
+
+(* Rush Hour (a sliding puzzle) formalized in NDL *)
+
+(* 2016 (C) Jussi Rintanen *)
+
+type coord = [0..5];
+
+decl carV2[coord,coord] : bool;
+decl carV3[coord,coord] : bool;
+decl carH2[coord,coord] : bool;
+decl carH3[coord,coord] : bool;
+decl empty[coord,coord] : bool;
+
+// The predicates indicate the locations of the cars. There are small cars taking
+// two grid cells, and large cars taking three grid cells. Each car can be placed
+// in the grid either horizontally or vertically.
+// The location of a car is indicated by the coordinates of its left end (for horizontally
+// placed cars) or of its bottom end (for vertically placed cars).
+
+action moveH2right(x : [0..3], y : coord)
+carH2(x,y) & empty(x+2,y)
+=>
+carH2(x,y) := 0;
+carH2(x+1,y) := 1;
+empty(x,y) := 1;
+empty(x+2,y) := 0;
+
+action moveH2left(x : [1..4], y : coord)
+carH2(x,y) & empty(x-1,y)
+=>
+carH2(x,y) := 0;
+carH2(x-1,y) := 1;
+empty(x+1,y) := 1;
+empty(x-1,y) := 0;
+
+action moveV2up(x : coord, y : [0..3])
+carV2(x,y) & empty(x,y+2)
+=>
+carV2(x,y) := 0;
+carV2(x,y+1) := 1;
+empty(x,y) := 1;
+empty(x,y+2) := 0;
+
+action moveV2down(x : coord, y : [1..4])
+carV2(x,y) & empty(x,y-1)
+=>
+carV2(x,y) := 0;
+carV2(x,y-1) := 1;
+empty(x,y+1) := 1;
+empty(x,y-1) := 0;
+
+action moveH3right(x : [0..2], y : coord)
+carH3(x,y) & empty(x+3,y)
+=>
+carH3(x,y) := 0;
+carH3(x+1,y) := 1;
+empty(x,y) := 1;
+empty(x+3,y) := 0;
+
+action moveH3left(x : [1..3], y : coord)
+carH3(x,y) & empty(x-1,y)
+=>
+carH3(x,y) := 0;
+carH3(x-1,y) := 1;
+empty(x+2,y) := 1;
+empty(x-1,y) := 0;
+
+action moveV3up(x : coord, y : [0..2])
+carV3(x,y) & empty(x,y+3)
+=>
+carV3(x,y) := 0;
+carV3(x,y+1) := 1;
+empty(x,y) := 1;
+empty(x,y+3) := 0;
+
+action moveV3down(x : coord, y : [1..3])
+carV3(x,y) & empty(x,y-1)
+=>
+carV3(x,y) := 0;
+carV3(x,y-1) := 1;
+empty(x,y+2) := 1;
+empty(x,y-1) := 0;
+
+// REMARK: coordinates for horizontal cars is leftmost cell,
+//         for vertical cars it is the bottommost cell
+
+goal carH2(4,3);
+
+// Grid cells:
+// 05 15 25 35 45 55
+// 04 14 24 34 44 54
+// 03 13 23 33 43 53
+// 02 12 22 32 42 52
+// 01 11 21 31 41 51
+// 00 10 20 30 40 50
+
+initial
+    empty(0,0) := 1;
+    empty(0,1) := 1;
+    empty(0,2) := 1;
+    empty(0,4) := 1;
+    empty(0,5) := 1;
+    empty(1,0) := 1;
+    empty(1,1) := 1;
+    empty(1,2) := 1;
+    empty(1,4) := 1;
+    empty(1,5) := 1;
+    empty(2,0) := 1;
+    empty(2,2) := 1;
+    empty(3,0) := 1;
+    empty(3,2) := 1;
+    empty(3,3) := 1;
+    empty(3,4) := 1;
+    empty(4,0) := 1;
+    empty(4,2) := 1;
+    empty(4,3) := 1;
+    empty(4,4) := 1;
+    empty(5,0) := 1;
+    empty(5,2) := 1;
+  carH2(4,1) := 1;
+  carH2(2,1) := 1;
+  carH2(0,3) := 1;
+  carH3(2,5) := 1;
+  carV2(2,3) := 1;
+  carV3(5,3) := 1;

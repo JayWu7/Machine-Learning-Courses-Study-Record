@@ -1,0 +1,40 @@
+
+*** These modified files were found in JOE when it aborted on Fri Dec  6 15:29:47 2019
+*** JOE was aborted by UNIX signal 1
+
+*** File '/m/home/home1/17/wux4/unix/Projects/Machine-Learning-Courses-Study-Record/.git/COMMIT_EDITMSG'
+got result
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Committer: Wu Xiaobo <wux4@deadfish.org.aalto.fi>
+#
+# On branch master
+# Your branch is up to date with 'origin/master'.
+#
+# Changes to be committed:
+#	new file:   roadNet-CA_res.txt
+#	new file:   soc-Epinions1_res.txt
+#	new file:   web-NotreDame_res.txt
+#
+# Changes not staged for commit:
+#	modified:   ../graph_partitioning.py
+#
+# Untracked files:
+#	../.graph_partitioning.py.swp
+#
+
+*** File '(Unnamed)'
+wq
+wq
+
+*** File '(Unnamed)'
+/m/home/home1/17/wux4/unix/Projects/Machine-Learning-Courses-Study-Record/.git/COMMIT_EDITMSG
+/m/home/home1/17/wux4/unix/Projects/Machine-Learning-Courses-Study-Record/.git/COMMIT_EDITMSG
+/m/home/home1/17/wux4/unix/Projects/Machine-Learning-Courses-Study-Record/.git/COMMIT_EDITMSG
+
+*** File '* Startup Log *'
+Processing '/etc/joe/editorrc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/editorrc

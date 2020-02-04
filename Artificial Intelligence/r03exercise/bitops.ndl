@@ -1,7 +1,7 @@
 
 (* Manipulation of bit-vectors by the operations of
      increment +1,
-     shift left, and
+     shift left, and::
      inverting some of the bottom bits.
    Objective: obtain the goal vector with fewest possible operations.
 *)
@@ -22,27 +22,29 @@ decl B[bits] : bool;
 action inc()
 true
 =>
-if not B[0] then B[0];
-if not B[1] then {B[1]; not B[0];};
-if not B[2] then {B[2]; not B[1]; not B[2];};
-if not B[3] then {B[3]; not B[2]; not B[1]; not B[0];}; 
-if not B[4] then {B[4]; not B[3]; not B[2]; not B[1]; not B[0];}; 
-
+if not B[0] then B[0] := 1
+else if not B[1] then {B[1] := 1; B[0] := 0;}
+else if not B[2] then {B[2] := 1; B[1] := 0; B[0] := 0;}
+else if not B[3] then {B[3] := 1; B[2] := 0; B[1] := 0; B[0] := 0;}
+else if not B[4] then {B[4] := 1; B[3] := 0; B[2] := 0; B[1] := 0; B[0] := 0;}
+else if not B[5] then {B[5] := 1; B[4] := 0; B[3] := 0; B[2] := 0; B[1] := 0; B[0] := 0;};
 
 (* Shift: Turn uvwxyz to vwxyz0 *)
-
+(*
 action shift()
 true
 =>
-B[4] := B[3]
-B[3] := B[2]
-B[2] := B[1]
-B[1] := B[0]
-B[0] := 0
-
+B[5] := B[4];
+B[4] := B[3];
+B[3] := B[2];
+B[2] := B[1];
+B[1] := B[0];
+B[0] := 0;
+*)
 (* Invert 3 least significant bits: uvwxyz to uvwXYZ,
      where X is x complemented, i.e. 0 becomes 1 and 1 becomes 0.
 *)
+
 
 action invert210()
 true

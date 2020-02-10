@@ -30,7 +30,7 @@ else if not B[4] then {B[4] := 1; B[3] := 0; B[2] := 0; B[1] := 0; B[0] := 0;}
 else if not B[5] then {B[5] := 1; B[4] := 0; B[3] := 0; B[2] := 0; B[1] := 0; B[0] := 0;};
 
 (* Shift: Turn uvwxyz to vwxyz0 *)
-(*
+
 action shift()
 true
 =>
@@ -40,7 +40,7 @@ B[3] := B[2];
 B[2] := B[1];
 B[1] := B[0];
 B[0] := 0;
-*)
+
 (* Invert 3 least significant bits: uvwxyz to uvwXYZ,
      where X is x complemented, i.e. 0 becomes 1 and 1 becomes 0.
 *)

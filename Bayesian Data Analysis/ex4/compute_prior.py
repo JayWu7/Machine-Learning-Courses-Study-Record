@@ -8,7 +8,6 @@ import scipy.stats as st
 import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
 
-
 custom_styles = dict(
     gray_background={
         'axes.axisbelow': True,
@@ -40,6 +39,7 @@ def log_prior(a, b):
     rv = multivariate_normal([0, 10], [[4, 10], [10, 100]])
     p = rv.pdf([a, b])
     return np.log(p)
+
 
 # data
 x = np.array([-0.86, -0.30, -0.05, 0.73])
@@ -237,7 +237,7 @@ def plot_hist_posterior(resamples_a, resamples_b):
 
 
 if __name__ == '__main__':
-    print(log_posterior(1.89,24.76))
+    print(log_posterior(1.89, 24.76))
     # samples_a = [1.8, 0.75, 1.5]
     # samples_b = [10.2, 14.12, 9]
     #
